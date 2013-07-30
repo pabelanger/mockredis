@@ -82,30 +82,36 @@ class TestRedisList(TestCase):
 
     def test_lrem(self):
         self.redis.redis[LIST1] = [VAL1, VAL2, VAL1, VAL3, VAL4, VAL2]
-        self.redis.lrem(LIST1, 0, VAL1)
+        res = self.redis.lrem(LIST1, 0, VAL1)
+        self.assertEqual(res, 2)
         self.assertListEqual([VAL2, VAL3, VAL4, VAL2], self.redis.redis[LIST1])
 
         self.redis.redis[LIST1] = [VAL1, VAL2, VAL1, VAL3, VAL4, VAL2]
-        self.redis.lrem(LIST1, 1, VAL2)
+        res = self.redis.lrem(LIST1, 1, VAL2)
+        self.assertEqual(res, 1)
         self.assertListEqual([VAL1, VAL1, VAL3, VAL4, VAL2],
                              self.redis.redis[LIST1])
 
         self.redis.redis[LIST1] = [VAL1, VAL2, VAL1, VAL3, VAL4, VAL2]
-        self.redis.lrem(LIST1, 100, VAL1)
+        res = self.redis.lrem(LIST1, 100, VAL1)
+        self.assertEqual(res, 2)
         self.assertListEqual([VAL2, VAL3, VAL4, VAL2], self.redis.redis[LIST1])
 
         self.redis.redis[LIST1] = [VAL1, VAL2, VAL1, VAL3, VAL4, VAL2]
-        self.redis.lrem(LIST1, -1, VAL3)
+        res = self.redis.lrem(LIST1, -1, VAL3)
+        self.assertEqual(res, 1)
         self.assertListEqual([VAL1, VAL2, VAL1, VAL4, VAL2],
                              self.redis.redis[LIST1])
 
         self.redis.redis[LIST1] = [VAL1, VAL2, VAL1, VAL3, VAL4, VAL2]
-        self.redis.lrem(LIST1, -1, VAL2)
+        res = self.redis.lrem(LIST1, -1, VAL2)
+        self.assertEqual(res, 1)
         self.assertListEqual([VAL1, VAL2, VAL1, VAL3, VAL4],
                              self.redis.redis[LIST1])
 
         self.redis.redis[LIST1] = [VAL1, VAL2, VAL1, VAL3, VAL4, VAL2]
-        self.redis.lrem(LIST1, -2, VAL2)
+        res = self.redis.lrem(LIST1, -2, VAL2)
+        self.assertEqual(res, 2)
         self.assertListEqual([VAL1, VAL1, VAL3, VAL4], self.redis.redis[LIST1])
 
     def test_rpoplpush(self):

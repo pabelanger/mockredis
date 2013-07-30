@@ -425,17 +425,20 @@ class MockRedis(object):
     def lrem(self, key, count, value):
         """Emulate lrem."""
         redis_list = self._get_list(key, 'LREM')
+        res = 0
 
         if key in self.redis:
             if count == 0:
                 # Remove all ocurrences
                 while redis_list.count(value):
                     redis_list.remove(value)
+                    res += 1
             elif count > 0:
                 counter = 0
                 # remove first 'count' ocurrences
                 while redis_list.count(value):
                     redis_list.remove(value)
+                    res += 1
                     counter += 1
                     if counter >= count:
                         break
@@ -446,9 +449,13 @@ class MockRedis(object):
                 for v in reversed(redis_list):
                     if v == value and counter > 0:
                         counter -= 1
+                        res += 1
                     else:
                         new_list.append(v)
+
                 self.redis[key] = list(reversed(new_list))
+
+        return res
 
     def rpoplpush(self, source, destination):
         """Emulate rpoplpush"""
